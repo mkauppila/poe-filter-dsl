@@ -6,11 +6,12 @@ local index = {
   'SetBorderColor',
   'MinimapIcon',
   'PlayEffect',
+  -- TODO: add rest of the keys here
   'Continue',
   'Show'
 }
 
-local indent = ""
+local indent = "" -- better indentation support with indentLevel and indentSymbol
 
 local op = {
   Equal       = "=",
