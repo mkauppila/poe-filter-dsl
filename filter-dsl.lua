@@ -64,6 +64,19 @@ local function isTable(v)
   return type(v) == 'table'
 end
 
+local function emitEmptyLine()
+  io.write('\n')
+end
+
+local function emit(key, value, comment)
+  io.write(indent)
+  io.write(key .. " " .. (value or ""))
+  if comment then
+    io.write(" # " .. comment)
+  end
+  io.write('\n')
+end
+
 local function processTableValue(value)
   local comment = value.comment
   value.comment = nil
@@ -88,20 +101,23 @@ local function processRule(key, value)
     value, comment = processTableValue(value)
   end
 
-  io.write(indent .. key .. " " .. value)
-  if comment then
-    io.write(" # " .. comment)
-  end
-  io.write('\n')
+  emit(key, value, comment)
 end
 
+local commentEmitted = false
 local function comment(comment)
-  print("# " .. comment)
+  emit("# " .. comment)
+  commentEmitted = true
 end
 
 -- not defined as local because the reference from `ProcessRule`
 function Show(spec)
-  io.write('\n' .. indent .. "Show" .. '\n')
+  if commentEmitted == false then
+    emitEmptyLine()
+  end
+  emit "Show"
+  commentEmitted = false
+
   indent = indent .. "  "
   for _, i in ipairs(index) do
     local value = spec[i]
