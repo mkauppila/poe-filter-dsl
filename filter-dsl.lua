@@ -1,4 +1,5 @@
 local index = {
+  'Class',
   'BaseType',
   'Rarity',
   'SetFontSize',
