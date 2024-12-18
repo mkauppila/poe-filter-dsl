@@ -70,7 +70,10 @@ end
 
 local function emit(key, value, comment)
   io.write(indent)
-  io.write(key .. " " .. (value or ""))
+  io.write(key)
+  if value then
+    io.write(" " .. value)
+  end
   if comment then
     io.write(" # " .. comment)
   end
@@ -90,9 +93,12 @@ local function processTableValue(value)
   return value, comment
 end
 
+-- forward declarion of `Show` for embedded show blocks
+local show
+
 local function processRule(key, value)
   if key == "Show" then
-    Show(value) -- TODO: support comment for show?
+    show(value) -- TODO: support comment for show?
     return
   end
 
@@ -110,8 +116,7 @@ local function comment(comment)
   commentEmitted = true
 end
 
--- not defined as local because the reference from `ProcessRule`
-function Show(spec)
+show = function(spec)
   if commentEmitted == false then
     emitEmptyLine()
   end
@@ -129,7 +134,7 @@ function Show(spec)
 end
 
 return {
-  Show = Show,
+  Show = show,
   Comment = comment,
   EffectColor = effectColor,
   MinimapIcons = minimapIcons,
