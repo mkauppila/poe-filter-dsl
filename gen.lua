@@ -20,8 +20,8 @@ Show {
     SetBorderColor = Color.Brown, --{ 255, 128, 55, 255 },
     Show = {
       BaseType = { "Rune", "Soul Core" },
-      TextColor = { Color.Brown, comment = "amazing color" },
-      BorderColor = { 255, 128, 55, 255 },
+      SetTextColor = { Color.Brown, comment = "amazing color" },
+      SetBorderColor = { 255, 128, 55, 255 },
     }
   }
 }
