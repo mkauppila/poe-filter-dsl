@@ -2,11 +2,15 @@ local index = {
   'Class',
   'BaseType',
   'Rarity',
+  'Sockets',
+  'StackSize',
   'SetFontSize',
   'SetTextColor',
   'SetBorderColor',
+  'SetBackgroundColor',
   'MinimapIcon',
   'PlayEffect',
+  'PlayAlertSound',
   -- TODO: add rest of the keys here
   'Continue',
   'Show'
@@ -16,16 +20,17 @@ local indent = "" -- TODO: better indentation support with indentLevel and inden
 
 -- TODO: try actual module to fix the forward declaration
 -- TODO: support Hide blocks
+-- TODO: check for valid keys, abort with error on invalid ones
 
 local op = {
-  Equal       = "=",
-  Not         = "!",
-  NotEqual    = "!=",
-  LessOrEqual = "<=",
-  MoreOrEqual = ">=",
-  Less        = "<",
-  More        = ">",
-  ExactMatch  = "=="
+  Equal          = "=",
+  Not            = "!",
+  NotEqual       = "!=",
+  LessOrEqual    = "<=",
+  GreaterOrEqual = ">=",
+  Less           = "<",
+  Greater        = ">",
+  ExactMatch     = "=="
 }
 
 local itemRarity = {
@@ -124,9 +129,9 @@ end
 show = function(spec)
   if not commentEmitted then
     emitEmptyLine()
-    commentEmitted = false
   end
   emit "Show"
+  commentEmitted = false
 
   indent = indent .. "  "
   for _, i in ipairs(index) do
