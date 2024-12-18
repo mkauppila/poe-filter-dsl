@@ -115,16 +115,17 @@ end
 
 local commentEmitted = false
 local function comment(comment)
+  emitEmptyLine()
   emit("# " .. comment)
   commentEmitted = true
 end
 
 show = function(spec)
-  if commentEmitted == false then
+  if not commentEmitted then
     emitEmptyLine()
+    commentEmitted = false
   end
   emit "Show"
-  commentEmitted = false
 
   indent = indent .. "  "
   for _, i in ipairs(index) do
