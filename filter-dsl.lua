@@ -63,32 +63,35 @@ local function isTable(v)
   return type(v) == 'table'
 end
 
-local function processRule(key, value)
-  if not isTable(value) then
-    io.write(indent .. key .. " " .. value .. '\n')
-  else
-    local comment = value.comment
-    value.comment = nil
+local function processTableValue(value)
+  local comment = value.comment
+  value.comment = nil
 
-    if key == "Show" then
-      Show(value) -- TODO: support comment for show?
-      return
-    elseif key == "Continue" then
-      value = {}
-    end
-
-    -- first value might be a table (ie. it's embedded color table)
-    if isTable(value[1]) then
-      value = value[1]
-    end
-    value = table.concat(value, " ")
-
-    io.write(indent .. key .. " " .. value)
-    if comment then
-      io.write(" # " .. comment)
-    end
-    io.write('\n')
+  -- first value might be a table (ie. it's embedded color table)
+  if isTable(value[1]) then
+    value = value[1]
   end
+  value = table.concat(value, " ")
+
+  return value, comment
+end
+
+local function processRule(key, value)
+  if key == "Show" then
+    Show(value) -- TODO: support comment for show?
+    return
+  end
+
+  local comment
+  if isTable(value) then
+    value, comment = processTableValue(value)
+  end
+
+  io.write(indent .. key .. " " .. value)
+  if comment then
+    io.write(" # " .. comment)
+  end
+  io.write('\n')
 end
 
 local function comment(comment)
