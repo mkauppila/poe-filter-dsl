@@ -7,7 +7,8 @@ local index = {
   'MinimapIcon',
   'PlayEffect',
   'Continue',
-  'Show' }
+  'Show'
+}
 
 local indent = ""
 
@@ -22,14 +23,14 @@ local op = {
   ExactMatch  = "=="
 }
 
-local ItemRarity = {
+local itemRarity = {
   Normal = "Normal",
   Magic = "Magic",
   Rare = "Rare",
   Unique = "Unique"
 }
 
-local EffectColor = {
+local effectColor = {
   Red = "Red",
   Green = "Green",
   Blue = "Blue",
@@ -58,57 +59,29 @@ local minimapIcons = {
   UpsideDownHouse = "UpsideDownHouse"
 }
 
-function IsTable(v)
+local function isTable(v)
   return type(v) == 'table'
 end
 
-local function rgbaColor(value)
-  return table.concat(value, " ")
-end
-
-
-function ProcessRule(key, value)
-  if type(value) ~= "table" then
+local function processRule(key, value)
+  if not isTable(value) then
     io.write(indent .. key .. " " .. value .. '\n')
-  elseif type(value) == "table" then
+  else
     local comment = value.comment
     value.comment = nil
 
-    if key == "BaseType" then
-      value = table.concat(value, " ")
-    elseif string.find(key, "Color") then
-      if type(value[1]) == 'table' then
-        value = rgbaColor(value[1])
-      else
-        value = rgbaColor(value)
-      end
-    elseif string.find(key, "Rarity") then
-      if (IsOp(value[1])) then
-        value = value[1] .. " " .. value[2]
-      else
-        value = table.concat(value, " ")
-      end
-    elseif key == "MinimapIcon" then
-      local size = value[1]
-      local color = value[2]
-      local icon = value[3]
-
-      value = table.concat({
-          validSizeOrDefault(size, 1),
-          validEffectColorOrDefault(color, EffectColor.Pink),
-          validMinimapIconOrDefault(icon, minimapIcons.Cross),
-        },
-        " ")
-    elseif key == "PlayEffect" then
-      value = value[1] .. " " .. "Temp"
-    elseif key == "Show" then
-      Show(value)
+    if key == "Show" then
+      Show(value) -- TODO: support comment for show?
       return
     elseif key == "Continue" then
-      value = ""
-    else
+      value = {}
+    end
+
+    -- first value might be a table (ie. it's embedded color table)
+    if isTable(value[1]) then
       value = value[1]
     end
+    value = table.concat(value, " ")
 
     io.write(indent .. key .. " " .. value)
     if comment then
@@ -118,42 +91,18 @@ function ProcessRule(key, value)
   end
 end
 
-function validSizeOrDefault(size, default)
-  if (0 <= size and size <= 2) then
-    return size
-  end
-  return default
-end
-
-function validEffectColorOrDefault(color, default)
-  if (EffectColor[color] ~= nil) then
-    return color
-  end
-  return default
-end
-
-function validMinimapIconOrDefault(icon, default)
-  if (minimapIcons[icon] ~= nil) then
-    return icon
-  end
-  return default
-end
-
-function IsOp(v)
-  return op[v] ~= nil
-end
-
-local function Comment(comment)
+local function comment(comment)
   print("# " .. comment)
 end
 
+-- not defined as local because the reference from `ProcessRule`
 function Show(spec)
   print('\n' .. indent .. "Show")
   indent = indent .. "  "
   for _, i in ipairs(index) do
     local value = spec[i]
-    if value ~= nil then
-      ProcessRule(i, value)
+    if value then
+      processRule(i, value)
     end
   end
   indent = ""
@@ -161,9 +110,9 @@ end
 
 return {
   Show = Show,
-  Comment = Comment,
-  EffectColor = EffectColor,
-  minimapIcons = minimapIcons,
-  op = op,
-  ItemRarity = ItemRarity,
+  Comment = comment,
+  EffectColor = effectColor,
+  MinimapIcons = minimapIcons,
+  Op = op,
+  ItemRarity = itemRarity,
 }
