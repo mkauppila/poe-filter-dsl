@@ -11,7 +11,10 @@ local index = {
   'Show'
 }
 
-local indent = "" -- better indentation support with indentLevel and indentSymbol
+local indent = "" -- TODO: better indentation support with indentLevel and indentSymbol
+
+-- TODO: try actual module to fix the forward declaration
+-- TODO: support Hide blocks
 
 local op = {
   Equal       = "=",
