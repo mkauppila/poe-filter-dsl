@@ -1,44 +1,71 @@
-local index = { 'BaseType', 'Rarity', 'SetFontSize', 'SetTextColor', 'SetBorderColor', 'MinimapIcon', 'PlayEffect',
+local index = {
+  'BaseType',
+  'Rarity',
+  'SetFontSize',
+  'SetTextColor',
+  'SetBorderColor',
+  'MinimapIcon',
+  'PlayEffect',
   'Continue',
   'Show' }
+
 local indent = ""
 
-function dump(o)
-  if type(o) == 'table' then
-    local s = '{ '
-    for k, v in pairs(o) do
-      if type(k) ~= 'number' then k = '"' .. k .. '"' end
-      s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
-    end
-    return s .. '} '
-  else
-    return tostring(o)
-  end
-end
+local op = {
+  Equal       = "=",
+  Not         = "!",
+  NotEqual    = "!=",
+  LessOrEqual = "<=",
+  MoreOrEqual = ">=",
+  Less        = "<",
+  More        = ">",
+  ExactMatch  = "=="
+}
+
+local ItemRarity = {
+  Normal = "Normal",
+  Magic = "Magic",
+  Rare = "Rare",
+  Unique = "Unique"
+}
+
+local EffectColor = {
+  Red = "Red",
+  Green = "Green",
+  Blue = "Blue",
+  Brown = "Brown",
+  White = "White",
+  Yellow = "Yellow",
+  Cyan = "Cyan",
+  Grey = "Grey",
+  Orange = "Orange",
+  Pink = "Pink",
+  Purple = "Purple"
+}
+
+local minimapIcons = {
+  Circle = "Circle",
+  Diamond = "Diamond",
+  Hexagon = "Hexagon",
+  Square = "Square",
+  Star = "Star",
+  Triangle = "Triangle",
+  Cross = "Cross",
+  Moon = "Moon",
+  Raindrop = "Raindrop",
+  Kite = "Kite",
+  Pentagon = "Pentagon",
+  UpsideDownHouse = "UpsideDownHouse"
+}
 
 function IsTable(v)
   return type(v) == 'table'
-end
-
-local function Comment(comment)
-  print("# " .. comment)
 end
 
 local function rgbaColor(value)
   return table.concat(value, " ")
 end
 
-function Show(spec)
-  print('\n' .. indent .. "Show")
-  indent = indent .. "  "
-  for _, i in ipairs(index) do
-    local value = spec[i]
-    if value ~= nil then
-      ProcessRule(i, value)
-    end
-  end
-  indent = ""
-end
 
 function ProcessRule(key, value)
   if type(value) ~= "table" then
@@ -91,14 +118,6 @@ function ProcessRule(key, value)
   end
 end
 
-local Color = {
-  Brown = { 255, 125, 125 }
-}
-
-local Icon = {
-  Star = "star"
-}
-
 function validSizeOrDefault(size, default)
   if (0 <= size and size <= 2) then
     return size
@@ -120,56 +139,25 @@ function validMinimapIconOrDefault(icon, default)
   return default
 end
 
-EffectColor = {
-  Red = "Red",
-  Green = "Green",
-  Blue = "Blue",
-  Brown = "Brown",
-  White = "White",
-  Yellow = "Yellow",
-  Cyan = "Cyan",
-  Grey = "Grey",
-  Orange = "Orange",
-  Pink = "Pink",
-  Purple = "Purple"
-}
-
-minimapIcons = {
-  Circle = "Circle",
-  Diamond = "Diamond",
-  Hexagon = "Hexagon",
-  Square = "Square",
-  Star = "Star",
-  Triangle = "Triangle",
-  Cross = "Cross",
-  Moon = "Moon",
-  Raindrop = "Raindrop",
-  Kite = "Kite",
-  Pentagon = "Pentagon",
-  UpsideDownHouse = "UpsideDownHouse"
-}
-
 function IsOp(v)
   return op[v] ~= nil
 end
 
-op = {
-  Equal       = "=",
-  Not         = "!",
-  NotEqual    = "!=",
-  LessOrEqual = "<=",
-  MoreOrEqual = ">=",
-  Less        = "<",
-  More        = ">",
-  ExactMatch  = "=="
-}
+local function Comment(comment)
+  print("# " .. comment)
+end
 
-ItemRarity = {
-  Normal = "Normal",
-  Magic = "Magic",
-  Rare = "Rare",
-  Unique = "Unique"
-}
+function Show(spec)
+  print('\n' .. indent .. "Show")
+  indent = indent .. "  "
+  for _, i in ipairs(index) do
+    local value = spec[i]
+    if value ~= nil then
+      ProcessRule(i, value)
+    end
+  end
+  indent = ""
+end
 
 return {
   Show = Show,

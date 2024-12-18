@@ -1,7 +1,7 @@
 local filter = require "filter-dsl"
 -- require "filter-theme"
-local Show, Comment, EffectColor, minimapIcons, ItemRarity = filter.Show, filter.Comment, EffectColor, minimapIcons,
-    ItemRarity
+local Show, Comment, EffectColor, minimapIcons, ItemRarity, op = filter.Show, filter.Comment, filter.EffectColor,
+    filter.minimapIcons, filter.ItemRarity, filter.op
 
 local Color = {
   Brown = { 255, 125, 125 }
