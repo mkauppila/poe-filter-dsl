@@ -100,7 +100,7 @@ end
 
 -- not defined as local because the reference from `ProcessRule`
 function Show(spec)
-  print('\n' .. indent .. "Show")
+  io.write('\n' .. indent .. "Show" .. '\n')
   indent = indent .. "  "
   for _, i in ipairs(index) do
     local value = spec[i]
